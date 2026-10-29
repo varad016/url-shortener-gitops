@@ -1,0 +1,60 @@
+# Defaults. Environment-specific values live in values-kind.yaml / values-eks.yaml.
+
+replicaCount: 2
+
+image:
+  repository: url-shortener
+  tag: ""                    # empty = Chart.appVersion. In GitOps, CI sets this to the new tag
+  pullPolicy: IfNotPresent
+
+app:
+  port: 5000                 # port gunicorn listens on (matches the Dockerfile)
+  baseUrl: http://localhost:5000
+  codeLength: "6"
+
+service:
+  port: 5000
+
+db:
+  host: ""                   # empty + postgres.enabled=true -> the in-cluster Postgres Service
+                             # required when postgres.enabled=false (the RDS endpoint)
+  port: "5432"
+  name: urlshortener
+  user: postgres
+  sslmode: prefer            # use "require" on RDS
+  password: ""               # kind/dev only. Never commit a real password
+  existingSecret: ""         # name of a Secret that already has the key DB_PASSWORD
+                             # (on EKS, created by External Secrets from Secrets Manager)
+
+postgres:
+  enabled: true              # true on kind, false on EKS (RDS is used instead)
+  image: postgres:16
+  storage: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+securityContext:
+  runAsUser: 10001           # must match the UID in the Dockerfile
+  readOnlyRootFilesystem: true   # set false temporarily when debugging
+
+ingress:
+  enabled: false
+  className: ""              # "nginx" on kind, "alb" on EKS
+  host: ""
+  annotations: {}
+
+nameOverride: ""
+fullnameOverride: ""

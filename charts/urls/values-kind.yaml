@@ -1,0 +1,15 @@
+# helm install urls ./charts/urls -f charts/urls/values-kind.yaml
+image:
+  repository: url-shortener
+  tag: dev
+  pullPolicy: IfNotPresent   # image is loaded with: kind load docker-image url-shortener:dev
+
+app:
+  baseUrl: http://localhost:5000
+
+db:
+  sslmode: prefer
+  password: devpassword      # dummy value, kind only
+
+postgres:
+  enabled: true

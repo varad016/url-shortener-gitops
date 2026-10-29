@@ -1,0 +1,6 @@
+apiVersion: v2
+name: urls
+description: URL shortener (Flask + Postgres) for kind and EKS
+type: application
+version: 0.1.0        # chart version: bump when the chart itself changes
+appVersion: "dev"     # default image tag if image.tag is empty
