@@ -1,0 +1,4 @@
+Try it:
+  kubectl rollout status deployment/{{ include "urls.fullname" . }}
+  kubectl port-forward svc/{{ include "urls.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }}
+  curl -s localhost:{{ .Values.service.port }}/ready
